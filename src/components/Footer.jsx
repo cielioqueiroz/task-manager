@@ -20,16 +20,17 @@ export default function Footer() {
     }
 
     updateDate()
-    const interval = setInterval(updateDate, 1000)
+    const interval = setInterval(updateDate, 60000)
     return () => clearInterval(interval)
   }, [])
 
   return (
     <footer className="sticky bottom-0 border-t border-white/10 bg-white/5 backdrop-blur-xl py-5">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p className="text-sm text-white/60">
-          <span className="font-bold text-white">Jacielio da Silva Queiroz</span>
-          <span className="mx-3">•</span>
+        <p className="text-sm text-white/60 flex items-center justify-center gap-2">
+          <i className="fas fa-copyright text-white/40"></i>
+          <span className="font-bold text-white">Cielio Queiroz</span>
+          <span className="mx-1">•</span>
           <span className="font-medium">{currentDate}</span>
         </p>
       </div>

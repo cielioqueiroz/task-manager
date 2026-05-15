@@ -6,9 +6,7 @@ export default function EditTaskModal({ task, onSave, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (text.trim()) {
-      onSave(text, priority)
-    }
+    onSave(text, priority)
   }
 
   return (

@@ -6,11 +6,9 @@ export default function TaskForm({ onAddTask }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (input.trim()) {
-      onAddTask(input, priority)
-      setInput('')
-      setPriority('medium')
-    }
+    onAddTask(input, priority)
+    setInput('')
+    setPriority('medium')
   }
 
   const handleKeyPress = (e) => {

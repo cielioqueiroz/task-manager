@@ -15,6 +15,12 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }) {
   const config = priorityConfig[task.priority] || priorityConfig.medium
 
   const handleEdit = (newText, newPriority) => {
+    // Valida se o texto está vazio - se inválido, não fecha o modal
+    if (!newText.trim()) {
+      onEdit(task.id, newText, newPriority)
+      return
+    }
+    // Se válido, edita e fecha o modal
     onEdit(task.id, newText, newPriority)
     setIsEditing(false)
   }

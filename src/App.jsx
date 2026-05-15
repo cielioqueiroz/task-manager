@@ -27,21 +27,18 @@ export default function App() {
         const parsed = JSON.parse(savedTasks)
         if (Array.isArray(parsed)) {
           setTasks(parsed)
-          console.log('✅ Tarefas carregadas do localStorage:', parsed.length)
         }
       } else {
-        console.log('📝 Nenhuma tarefa salva no localStorage')
         setTasks([])
       }
 
       // Carregar preferência de tema
       const savedDarkMode = localStorage.getItem(DARK_MODE_KEY) === 'true'
       setDarkMode(savedDarkMode)
-      console.log('🌙 Tema carregado:', savedDarkMode ? 'Escuro' : 'Claro')
 
       setIsLoaded(true)
     } catch (error) {
-      console.error('❌ Erro ao carregar dados do localStorage:', error)
+      console.error('Erro ao carregar dados do localStorage:', error)
       setTasks([])
       setIsLoaded(true)
     }
@@ -52,9 +49,8 @@ export default function App() {
     if (isLoaded) {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
-        console.log('💾 Tarefas salvas no localStorage:', tasks.length)
       } catch (error) {
-        console.error('❌ Erro ao salvar tarefas:', error)
+        console.error('Erro ao salvar tarefas:', error)
         showToast('Erro ao salvar tarefas!', 'error')
       }
     }
@@ -71,7 +67,7 @@ export default function App() {
         html.classList.remove('dark')
       }
     } catch (error) {
-      console.error('❌ Erro ao salvar tema:', error)
+      console.error('Erro ao salvar tema:', error)
     }
   }, [darkMode])
 
@@ -82,7 +78,7 @@ export default function App() {
 
   const addTask = (text, priority = 'medium') => {
     if (!text.trim()) {
-      showToast('Digite uma tarefa!', 'error')
+      showToast('📝 Para adicionar uma tarefa, digite algo no campo!', 'error')
       return
     }
 
@@ -105,11 +101,12 @@ export default function App() {
   }
 
   const toggleTask = (id) => {
-    setTasks(tasks.map(task =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    ))
     const task = tasks.find(t => t.id === id)
-    showToast(task?.completed ? '↩️ Tarefa reaberta' : '✓ Tarefa concluída!', 'success')
+    const newCompleted = !task?.completed
+    setTasks(tasks.map(t =>
+      t.id === id ? { ...t, completed: newCompleted } : t
+    ))
+    showToast(newCompleted ? '✓ Tarefa concluída!' : '↩️ Tarefa reaberta', 'success')
   }
 
   const deleteTask = (id) => {
@@ -118,6 +115,10 @@ export default function App() {
   }
 
   const editTask = (id, newText, newPriority) => {
+    if (!newText.trim()) {
+      showToast('✏️ Digite algo para salvar a tarefa!', 'error')
+      return
+    }
     setTasks(tasks.map(task =>
       task.id === id
         ? { ...task, text: newText.trim(), priority: newPriority }

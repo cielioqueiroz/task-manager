@@ -1,0 +1,451 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset e estilos globais */
+* {
+  transition: colors 0.3s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-gradient-to-br from-[#0f111a] to-[#181b2a];
+  @apply text-white;
+  font-feature-settings: "rounding" 1;
+}
+
+/* Scrollbar customizado */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-white/5;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-500/40 rounded-lg hover:bg-blue-500/60;
+}
+
+/* Custom checkbox */
+.checkbox-custom {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(59, 130, 246, 0.5);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.checkbox-custom:hover {
+  @apply scale-110 shadow-md;
+}
+
+.checkbox-custom:checked {
+  @apply bg-gradient-to-br from-blue-500 to-blue-600;
+  border-color: #3b82f6;
+}
+
+.checkbox-custom:checked::after {
+  content: '✓';
+  @apply text-white font-bold text-sm;
+}
+
+.checkbox-custom:focus {
+  @apply ring-2 ring-blue-500/40;
+}
+
+/* Animações */
+.task-item {
+  @apply animate-slide-in;
+}
+
+.fade-in {
+  @apply animate-fade-in;
+}
+
+/* Botões */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200;
+  @apply hover:shadow-lg active:scale-95;
+}
+
+.btn-primary {
+  @apply bg-gradient-to-br from-blue-500 to-blue-700 text-white;
+  @apply hover:from-blue-600 hover:to-blue-800;
+}
+
+.btn-secondary {
+  @apply bg-white/10 text-white border border-white/20;
+  @apply hover:bg-white/20;
+}
+
+.btn-danger {
+  @apply text-red-400;
+}
+
+/* Cards */
+.card {
+  @apply bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10;
+  @apply transition-all duration-300 hover:border-white/20;
+}
+
+.card-hover {
+  @apply hover:border-blue-400/40 hover:shadow-lg;
+}
+
+/* Badges de prioridade */
+.badge-priority {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold;
+  @apply border;
+}
+
+.badge-high {
+  @apply bg-red-500/20 text-red-300 border-red-500/30;
+}
+
+.badge-medium {
+  @apply bg-amber-500/20 text-amber-300 border-amber-500/30;
+}
+
+.badge-low {
+  @apply bg-emerald-500/20 text-emerald-300 border-emerald-500/30;
+}
+
+/* Toast notifications */
+.toast {
+  @apply fixed top-4 right-4 z-50 px-6 py-3 rounded-xl font-semibold text-white;
+  @apply animate-slide-in bg-white/10 backdrop-blur-xl border border-white/20;
+}
+
+.toast-success {
+  @apply border-emerald-500/40;
+}
+
+.toast-error {
+  @apply border-red-500/40;
+}
+
+.toast-info {
+  @apply border-blue-500/40;
+}
+
+/* Input */
+.input-field {
+  @apply w-full px-4 py-3 rounded-2xl border border-white/10;
+  @apply bg-white/5 text-white;
+  @apply placeholder-white/40;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-white/20;
+  @apply transition-all duration-200;
+}
+
+.input-field:hover {
+  @apply border-white/20;
+}
+
+/* Barra de progresso */
+.progress-bar {
+  @apply h-2 bg-white/10 rounded-full overflow-hidden;
+}
+
+.progress-fill {
+  @apply h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all duration-500;
+}
+
+/* Empty state */
+.empty-state {
+  @apply flex flex-col items-center justify-center py-16 text-center opacity-60 text-white;
+}
+
+.empty-state-icon {
+  @apply text-6xl mb-4 opacity-30 text-white;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .task-item {
+    @apply p-3;
+  }
+
+  .btn {
+    @apply px-3 py-2 text-sm;
+  }
+}
+
+/* Animação de carregamento */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Select customizado */
+select {
+  @apply input-field cursor-pointer;
+}
+
+select option {
+  background-color: #1a1d2e;
+  color: #ffffff;
+}
+
+html:not(.dark) select option {
+  background-color: #ffffff;
+  color: #111827;
+}
+
+/* Light mode styles */
+html:not(.dark) body {
+  @apply bg-gradient-to-br from-slate-100 to-slate-200 text-gray-900;
+}
+
+html:not(.dark) .card {
+  @apply bg-white/80 border-gray-300 shadow-sm;
+}
+
+html:not(.dark) .input-field {
+  @apply bg-white text-gray-900 border-gray-300 placeholder-gray-500;
+}
+
+html:not(.dark) .input-field:hover {
+  @apply border-gray-400;
+}
+
+html:not(.dark) .input-field:focus {
+  @apply ring-blue-400/40;
+}
+
+html:not(.dark) .btn-secondary {
+  @apply bg-gray-200 text-gray-900 border-gray-300;
+  @apply hover:bg-gray-300;
+}
+
+html:not(.dark) .filter-btn {
+  @apply bg-white text-gray-700 border-gray-300 shadow-sm;
+  @apply hover:border-blue-400 hover:text-blue-600;
+}
+
+html:not(.dark) .filter-btn.active {
+  @apply bg-blue-500 text-white border-blue-500 shadow-md;
+  @apply hover:bg-blue-600;
+}
+
+html:not(.dark) .modal-overlay {
+  @apply bg-black/40 backdrop-blur-sm;
+}
+
+html:not(.dark) .modal-content {
+  @apply bg-white border-gray-300 shadow-2xl;
+}
+
+html:not(.dark) .modal-header {
+  @apply text-gray-900;
+}
+
+html:not(.dark) label {
+  @apply text-gray-700;
+}
+
+html:not(.dark) .toast {
+  @apply bg-white text-gray-900 border-gray-300 shadow-lg;
+}
+
+html:not(.dark) .stats-card {
+  @apply bg-white border-gray-300 shadow-sm;
+}
+
+html:not(.dark) .empty-state,
+html:not(.dark) .empty-state-icon {
+  @apply text-gray-600;
+}
+
+html:not(.dark) header {
+  @apply bg-white border-gray-300 shadow-sm;
+}
+
+html:not(.dark) header h1 {
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+}
+
+html:not(.dark) header p {
+  @apply text-gray-600;
+}
+
+html:not(.dark) footer {
+  @apply bg-white border-gray-300 shadow-sm;
+}
+
+html:not(.dark) footer p {
+  @apply text-gray-700;
+}
+
+html:not(.dark) .task-item {
+  @apply bg-white border-gray-300 shadow-sm;
+}
+
+html:not(.dark) .task-item p {
+  @apply text-gray-900;
+}
+
+html:not(.dark) .badge-high {
+  @apply bg-red-100 text-red-700 border-red-300;
+}
+
+html:not(.dark) .badge-medium {
+  @apply bg-amber-100 text-amber-700 border-amber-300;
+}
+
+html:not(.dark) .badge-low {
+  @apply bg-emerald-100 text-emerald-700 border-emerald-300;
+}
+
+html:not(.dark) .stats-card-total {
+  @apply bg-blue-50 border-blue-300;
+}
+
+html:not(.dark) .stats-card-total i {
+  @apply text-blue-600;
+}
+
+html:not(.dark) .stats-card-pending {
+  @apply bg-amber-50 border-amber-300;
+}
+
+html:not(.dark) .stats-card-pending i {
+  @apply text-amber-600;
+}
+
+html:not(.dark) .stats-card-completed {
+  @apply bg-emerald-50 border-emerald-300;
+}
+
+html:not(.dark) .stats-card-completed i {
+  @apply text-emerald-600;
+}
+
+html:not(.dark) .progress-bar {
+  @apply bg-gray-300;
+}
+
+html:not(.dark) .stats-card span {
+  color: #4b5563 !important;
+}
+
+html:not(.dark) .stats-card-total p {
+  color: #2563eb !important;
+}
+
+html:not(.dark) .stats-card-pending p {
+  color: #d97706 !important;
+}
+
+html:not(.dark) .stats-card-completed p {
+  color: #059669 !important;
+}
+
+html:not(.dark) .task-item {
+  color: #111827;
+}
+
+html:not(.dark) .checkbox-custom {
+  @apply bg-white border-gray-400;
+}
+
+html:not(.dark) button i {
+  color: #4b5563;
+}
+
+html:not(.dark) header {
+  @apply border-gray-300 bg-white;
+}
+
+html:not(.dark) footer {
+  @apply border-gray-300 bg-white;
+}
+
+html:not(.dark) footer span {
+  color: #374151;
+}
+
+html:not(.dark) footer p span:first-child {
+  color: #111827;
+  font-weight: bold;
+}
+
+/* Task item styling */
+.task-item {
+  @apply bg-white/5 border-white/10 text-white;
+}
+
+.task-item p {
+  color: #ffffff;
+}
+
+.task-item .text-xs {
+  color: #cac9ff;
+}
+
+.task-item i {
+  color: #ffffff;
+}
+
+/* Filtro buttons custom */
+.filter-btn {
+  @apply px-5 py-2.5 rounded-full font-medium text-sm transition-all duration-300;
+  @apply border border-white/20 text-white/60;
+  @apply hover:border-blue-500/40 hover:text-blue-400;
+  @apply bg-white/5;
+}
+
+.filter-btn.active {
+  @apply bg-blue-500/20 text-blue-400;
+  @apply border-blue-500/40;
+  @apply hover:bg-blue-500/30;
+}
+
+.btn-delete {
+  @apply cursor-pointer;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4;
+}
+
+.modal-content {
+  @apply bg-[#1a1d2e] rounded-2xl p-6 max-w-md w-full;
+  @apply border border-white/10 backdrop-blur-xl;
+}
+
+.modal-header {
+  @apply text-xl font-bold text-white mb-4;
+}
+
+.modal-actions {
+  @apply flex gap-3 mt-6 justify-end;
+}

@@ -1,12 +1,12 @@
 import { useState } from 'react'
 
-export default function TaskForm({ onAddTask }) {
+export default function TaskForm({ onAddTask, isLoading }) {
   const [input, setInput] = useState('')
   const [priority, setPriority] = useState('medium')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onAddTask(input, priority)
+    await onAddTask(input, priority)
     setInput('')
     setPriority('medium')
   }
@@ -53,10 +53,11 @@ export default function TaskForm({ onAddTask }) {
 
           <button
             type="submit"
-            className="btn btn-primary min-w-fit whitespace-nowrap shadow-lg hover:shadow-xl py-3 px-6"
+            disabled={isLoading}
+            className="btn btn-primary min-w-fit whitespace-nowrap shadow-lg hover:shadow-xl py-3 px-6 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <i className="fas fa-plus text-lg"></i>
-            <span className="font-semibold">Adicionar</span>
+            <i className={`fas ${isLoading ? 'fa-spinner fa-spin' : 'fa-plus'} text-lg`}></i>
+            <span className="font-semibold">{isLoading ? 'Adicionando...' : 'Adicionar'}</span>
           </button>
         </div>
       </form>

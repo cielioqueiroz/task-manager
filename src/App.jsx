@@ -6,8 +6,9 @@ import Filters from './components/Filters'
 import TaskList from './components/TaskList'
 import Footer from './components/Footer'
 import Toast from './components/Toast'
+import { taskService } from './lib/taskService'
+import { testConnection } from './lib/testConnection'
 
-const STORAGE_KEY = 'taskManager_tasks'
 const DARK_MODE_KEY = 'darkMode'
 
 export default function App() {
@@ -17,44 +18,33 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(true)
   const [toast, setToast] = useState(null)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  // Carregar dados do localStorage na montagem do componente
+  // Carregar dados do Supabase na montagem do componente
   useEffect(() => {
-    try {
-      // Carregar tarefas
-      const savedTasks = localStorage.getItem(STORAGE_KEY)
-      if (savedTasks) {
-        const parsed = JSON.parse(savedTasks)
-        if (Array.isArray(parsed)) {
-          setTasks(parsed)
-        }
-      } else {
-        setTasks([])
-      }
-
-      // Carregar preferência de tema
-      const savedDarkMode = localStorage.getItem(DARK_MODE_KEY) === 'true'
-      setDarkMode(savedDarkMode)
-
-      setIsLoaded(true)
-    } catch (error) {
-      console.error('Erro ao carregar dados do localStorage:', error)
-      setTasks([])
-      setIsLoaded(true)
-    }
-  }, [])
-
-  // Salvar tarefas no localStorage sempre que mudam
-  useEffect(() => {
-    if (isLoaded) {
+    const loadData = async () => {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+        // Teste de conexão
+        const connTest = await testConnection()
+        if (!connTest.success) {
+          console.error('❌ Falha na conexão:', connTest.error)
+        }
+
+        const tasksData = await taskService.getTasks()
+        setTasks(tasksData)
       } catch (error) {
-        console.error('Erro ao salvar tarefas:', error)
-        showToast('Erro ao salvar tarefas!', 'error')
+        console.error('Erro ao carregar tarefas:', error)
+        showToast('Erro ao carregar tarefas do servidor', 'error')
+      } finally {
+        // Carregar preferência de tema
+        const savedDarkMode = localStorage.getItem(DARK_MODE_KEY) === 'true'
+        setDarkMode(savedDarkMode)
+        setIsLoaded(true)
       }
     }
-  }, [tasks, isLoaded])
+
+    loadData()
+  }, [])
 
   // Salvar preferência de tema
   useEffect(() => {
@@ -76,55 +66,70 @@ export default function App() {
     setTimeout(() => setToast(null), 3000)
   }
 
-  const addTask = (text, priority = 'medium') => {
+  const addTask = async (text, priority = 'medium') => {
     if (!text.trim()) {
       showToast('📝 Para adicionar uma tarefa, digite algo no campo!', 'error')
       return
     }
 
-    const newTask = {
-      id: Date.now(),
-      text: text.trim(),
-      completed: false,
-      priority,
-      createdAt: new Date().toLocaleString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
+    setIsLoading(true)
+    try {
+      const newTask = await taskService.addTask(text, priority)
+      setTasks([newTask, ...tasks])
+      showToast('✅ Tarefa adicionada com sucesso!')
+    } catch (error) {
+      console.error('Erro ao adicionar tarefa:', error)
+      showToast('❌ Erro ao adicionar tarefa!', 'error')
+    } finally {
+      setIsLoading(false)
     }
-
-    setTasks([newTask, ...tasks])
-    showToast('✅ Tarefa adicionada com sucesso!')
   }
 
-  const toggleTask = (id) => {
+  const toggleTask = async (id) => {
     const task = tasks.find(t => t.id === id)
     const newCompleted = !task?.completed
-    setTasks(tasks.map(t =>
-      t.id === id ? { ...t, completed: newCompleted } : t
-    ))
-    showToast(newCompleted ? '✓ Tarefa concluída!' : '↩️ Tarefa reaberta', 'success')
+
+    try {
+      await taskService.toggleTask(id, newCompleted)
+      setTasks(tasks.map(t =>
+        t.id === id ? { ...t, completed: newCompleted } : t
+      ))
+      showToast(newCompleted ? '✓ Tarefa concluída!' : '↩️ Tarefa reaberta', 'success')
+    } catch (error) {
+      console.error('Erro ao atualizar tarefa:', error)
+      showToast('❌ Erro ao atualizar tarefa!', 'error')
+    }
   }
 
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id))
-    showToast('🗑️ Tarefa removida', 'info')
+  const deleteTask = async (id) => {
+    try {
+      await taskService.deleteTask(id)
+      setTasks(tasks.filter(task => task.id !== id))
+      showToast('🗑️ Tarefa removida', 'info')
+    } catch (error) {
+      console.error('Erro ao deletar tarefa:', error)
+      showToast('❌ Erro ao deletar tarefa!', 'error')
+    }
   }
 
-  const editTask = (id, newText, newPriority) => {
+  const editTask = async (id, newText, newPriority) => {
     if (!newText.trim()) {
       showToast('✏️ Digite algo para salvar a tarefa!', 'error')
       return
     }
-    setTasks(tasks.map(task =>
-      task.id === id
-        ? { ...task, text: newText.trim(), priority: newPriority }
-        : task
-    ))
-    showToast('✏️ Tarefa atualizada com sucesso!', 'success')
+
+    try {
+      await taskService.editTask(id, newText, newPriority)
+      setTasks(tasks.map(task =>
+        task.id === id
+          ? { ...task, text: newText.trim(), priority: newPriority }
+          : task
+      ))
+      showToast('✏️ Tarefa atualizada com sucesso!', 'success')
+    } catch (error) {
+      console.error('Erro ao editar tarefa:', error)
+      showToast('❌ Erro ao editar tarefa!', 'error')
+    }
   }
 
   // Filtrar por status
@@ -174,7 +179,7 @@ export default function App() {
       {/* Main Content - Scroll natural da página */}
       <main className="flex-1">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-          <TaskForm onAddTask={addTask} />
+          <TaskForm onAddTask={addTask} isLoading={isLoading} />
           <Stats stats={stats} />
           <Filters
             currentFilter={filter}

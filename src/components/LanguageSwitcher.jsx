@@ -35,21 +35,27 @@ export default function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 bg-[#181b2a] border border-white/10 rounded-lg shadow-2xl z-50 backdrop-blur-xl overflow-hidden">
-          <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="absolute right-0 mt-3 bg-[#181b2a] border border-white/10 rounded-xl shadow-2xl z-50 backdrop-blur-xl overflow-hidden min-w-80">
+          <div className="p-8 grid grid-cols-3 gap-6">
             {languages.map(lang => (
               <button
                 key={lang.code}
                 onClick={() => handleLanguageChange(lang.code)}
-                className={`flex flex-col items-center gap-2 px-3 py-3 rounded-lg transition-all text-xs ${
+                className={`flex flex-col items-center gap-3 transition-all ${
                   i18n.language === lang.code
-                    ? 'bg-blue-500/30 border border-blue-500/50'
-                    : 'hover:bg-white/10'
+                    ? 'opacity-100'
+                    : 'opacity-75 hover:opacity-100'
                 }`}
                 title={lang.name}
               >
-                <i className={`fi fi-${lang.countryCode} text-2xl`}></i>
-                <span className={i18n.language === lang.code ? 'text-blue-400 font-medium' : 'text-gray-300'}>
+                <div className={`flex items-center justify-center w-20 h-20 rounded-full transition-all ${
+                  i18n.language === lang.code
+                    ? 'bg-blue-500/40 border-2 border-blue-400 shadow-lg shadow-blue-500/30'
+                    : 'bg-white/5 border border-white/10 hover:bg-white/10'
+                }`}>
+                  <i className={`fi fi-${lang.countryCode} text-5xl`}></i>
+                </div>
+                <span className={`text-sm font-medium text-center ${i18n.language === lang.code ? 'text-blue-300' : 'text-gray-400'}`}>
                   {lang.name}
                 </span>
               </button>

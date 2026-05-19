@@ -12,7 +12,8 @@
     "signInWith": "Entrar com",
     "dontHaveAccount": "Não tem uma conta?",
     "alreadyHaveAccount": "Já tem uma conta?",
-    "forgotPassword": "Esqueceu a senha?"
+    "forgotPassword": "Esqueceu a senha?",
+    "security": "Sua conta é protegida com segurança de nível empresarial"
   },
   "header": {
     "logout": "Sair",

@@ -12,7 +12,8 @@
     "signInWith": "Anmelden mit",
     "dontHaveAccount": "Noch kein Konto?",
     "alreadyHaveAccount": "Hast du bereits ein Konto?",
-    "forgotPassword": "Passwort vergessen?"
+    "forgotPassword": "Passwort vergessen?",
+    "security": "Ihr Konto ist durch Sicherheit auf Unternehmensebene geschützt"
   },
   "header": {
     "logout": "Abmelden",

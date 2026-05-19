@@ -12,7 +12,8 @@
     "signInWith": "使用以下方式登录",
     "dontHaveAccount": "没有账户？",
     "alreadyHaveAccount": "已有账户？",
-    "forgotPassword": "忘记密码？"
+    "forgotPassword": "忘记密码？",
+    "security": "您的账户受企业级安全保护"
   },
   "header": {
     "logout": "退出",

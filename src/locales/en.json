@@ -12,7 +12,8 @@
     "signInWith": "Sign in with",
     "dontHaveAccount": "Don't have an account?",
     "alreadyHaveAccount": "Already have an account?",
-    "forgotPassword": "Forgot your password?"
+    "forgotPassword": "Forgot your password?",
+    "security": "Your account is protected with enterprise-level security"
   },
   "header": {
     "logout": "Sign Out",

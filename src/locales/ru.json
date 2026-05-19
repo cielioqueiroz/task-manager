@@ -12,7 +12,8 @@
     "signInWith": "Войти с помощью",
     "dontHaveAccount": "У вас нет аккаунта?",
     "alreadyHaveAccount": "У вас уже есть аккаунт?",
-    "forgotPassword": "Забыли пароль?"
+    "forgotPassword": "Забыли пароль?",
+    "security": "Ваш аккаунт защищен безопасностью корпоративного уровня"
   },
   "header": {
     "logout": "Выход",

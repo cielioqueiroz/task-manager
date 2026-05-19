@@ -12,7 +12,8 @@
     "signInWith": "Iniciar sesión con",
     "dontHaveAccount": "¿No tienes una cuenta?",
     "alreadyHaveAccount": "¿Ya tienes una cuenta?",
-    "forgotPassword": "¿Olvidaste tu contraseña?"
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "security": "Tu cuenta está protegida con seguridad de nivel empresarial"
   },
   "header": {
     "logout": "Cerrar Sesión",

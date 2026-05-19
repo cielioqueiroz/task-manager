@@ -1,0 +1,75 @@
+{
+  "app": {
+    "title": "Task Manager",
+    "subtitle": "Organisieren Sie Ihre Aufgaben elegant"
+  },
+  "auth": {
+    "signUp": "Registrieren",
+    "signIn": "Anmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "signUpWith": "Registrieren mit",
+    "signInWith": "Anmelden mit",
+    "dontHaveAccount": "Noch kein Konto?",
+    "alreadyHaveAccount": "Hast du bereits ein Konto?",
+    "forgotPassword": "Passwort vergessen?"
+  },
+  "header": {
+    "logout": "Abmelden",
+    "darkMode": "Dunkler Modus",
+    "lightMode": "Heller Modus",
+    "language": "Sprache"
+  },
+  "tasks": {
+    "addTask": "Aufgabe hinzufügen",
+    "addTaskPlaceholder": "Geben Sie eine neue Aufgabe ein...",
+    "noTasks": "Noch keine Aufgaben",
+    "editTask": "Aufgabe bearbeiten",
+    "deleteTask": "Aufgabe löschen",
+    "confirmDelete": "Sind Sie sicher, dass Sie diese Aufgabe löschen möchten?",
+    "completed": "Aufgabe abgeschlossen!",
+    "reopened": "Aufgabe wieder geöffnet",
+    "updated": "Aufgabe erfolgreich aktualisiert!",
+    "created": "Aufgabe erfolgreich hinzugefügt!"
+  },
+  "filters": {
+    "all": "Alle",
+    "pending": "Ausstehend",
+    "completed": "Abgeschlossen",
+    "search": "Aufgaben durchsuchen..."
+  },
+  "stats": {
+    "total": "Gesamt",
+    "pending": "Ausstehend",
+    "completed": "Abgeschlossen"
+  },
+  "priority": {
+    "low": "Niedrig",
+    "medium": "Mittel",
+    "high": "Hoch"
+  },
+  "errors": {
+    "emptyTask": "Geben Sie etwas ein, um eine Aufgabe hinzuzufügen!",
+    "invalidPriority": "Ungültige Priorität!",
+    "invalidId": "Ungültige Aufgaben-ID",
+    "tooManyRequests": "Zu viele Anfragen! Bitte warten Sie {{seconds}}s",
+    "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "loadingError": "Fehler beim Laden von Aufgaben vom Server",
+    "addTaskError": "Fehler beim Hinzufügen der Aufgabe!",
+    "editTaskError": "Fehler beim Bearbeiten der Aufgabe!",
+    "deleteTaskError": "Fehler beim Löschen der Aufgabe!",
+    "authRequired": "Sie müssen authentifiziert sein!"
+  },
+  "messages": {
+    "loading": "Wird geladen...",
+    "rateLimit": "Sie haben zu viele Aufgaben hinzugefügt! Bitte warten Sie {{seconds}}s.",
+    "editRateLimit": "Bitte warten Sie {{seconds}}s, bevor Sie eine andere Aufgabe bearbeiten",
+    "deleteRateLimit": "Bitte warten Sie {{seconds}}s, bevor Sie eine andere Aufgabe löschen"
+  },
+  "validation": {
+    "textRequired": "Der Aufgabentext ist erforderlich",
+    "textTooShort": "Die Aufgabe muss mindestens 3 Zeichen lang sein",
+    "textTooLong": "Die Aufgabe darf nicht länger als 500 Zeichen sein",
+    "invalidPriority": "Wählen Sie eine gültige Priorität (niedrig, mittel, hoch)"
+  }
+}

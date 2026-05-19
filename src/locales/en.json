@@ -1,0 +1,75 @@
+{
+  "app": {
+    "title": "Task Manager",
+    "subtitle": "Organize your tasks elegantly"
+  },
+  "auth": {
+    "signUp": "Sign Up",
+    "signIn": "Sign In",
+    "email": "Email",
+    "password": "Password",
+    "signUpWith": "Sign up with",
+    "signInWith": "Sign in with",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "forgotPassword": "Forgot your password?"
+  },
+  "header": {
+    "logout": "Sign Out",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode",
+    "language": "Language"
+  },
+  "tasks": {
+    "addTask": "Add Task",
+    "addTaskPlaceholder": "Type a new task...",
+    "noTasks": "No tasks yet",
+    "editTask": "Edit Task",
+    "deleteTask": "Delete Task",
+    "confirmDelete": "Are you sure you want to delete this task?",
+    "completed": "Task completed!",
+    "reopened": "Task reopened",
+    "updated": "Task updated successfully!",
+    "created": "Task added successfully!"
+  },
+  "filters": {
+    "all": "All",
+    "pending": "Pending",
+    "completed": "Completed",
+    "search": "Search tasks..."
+  },
+  "stats": {
+    "total": "Total",
+    "pending": "Pending",
+    "completed": "Completed"
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "errors": {
+    "emptyTask": "Type something to add a task!",
+    "invalidPriority": "Invalid priority!",
+    "invalidId": "Invalid task ID",
+    "tooManyRequests": "Too many requests! Wait {{seconds}}s",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "loadingError": "Error loading tasks from server",
+    "addTaskError": "Error adding task!",
+    "editTaskError": "Error editing task!",
+    "deleteTaskError": "Error deleting task!",
+    "authRequired": "You need to be authenticated!"
+  },
+  "messages": {
+    "loading": "Loading...",
+    "rateLimit": "You added too many tasks! Wait {{seconds}}s.",
+    "editRateLimit": "Wait {{seconds}}s before editing another task",
+    "deleteRateLimit": "Wait {{seconds}}s before deleting another task"
+  },
+  "validation": {
+    "textRequired": "Task text is required",
+    "textTooShort": "Task must be at least 3 characters",
+    "textTooLong": "Task cannot be longer than 500 characters",
+    "invalidPriority": "Select a valid priority (low, medium, high)"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "app": {
+    "title": "任务管理器",
+    "subtitle": "优雅地组织您的任务"
+  },
+  "auth": {
+    "signUp": "注册",
+    "signIn": "登录",
+    "email": "电子邮件",
+    "password": "密码",
+    "signUpWith": "使用以下方式注册",
+    "signInWith": "使用以下方式登录",
+    "dontHaveAccount": "没有账户？",
+    "alreadyHaveAccount": "已有账户？",
+    "forgotPassword": "忘记密码？"
+  },
+  "header": {
+    "logout": "退出",
+    "darkMode": "深色模式",
+    "lightMode": "浅色模式",
+    "language": "语言"
+  },
+  "tasks": {
+    "addTask": "添加任务",
+    "addTaskPlaceholder": "输入新任务...",
+    "noTasks": "暂无任务",
+    "editTask": "编辑任务",
+    "deleteTask": "删除任务",
+    "confirmDelete": "确定要删除此任务吗？",
+    "completed": "任务完成！",
+    "reopened": "任务已重新打开",
+    "updated": "任务更新成功！",
+    "created": "任务添加成功！"
+  },
+  "filters": {
+    "all": "全部",
+    "pending": "待办",
+    "completed": "已完成",
+    "search": "搜索任务..."
+  },
+  "stats": {
+    "total": "总计",
+    "pending": "待办",
+    "completed": "已完成"
+  },
+  "priority": {
+    "low": "低",
+    "medium": "中",
+    "high": "高"
+  },
+  "errors": {
+    "emptyTask": "请输入内容以添加任务！",
+    "invalidPriority": "无效的优先级！",
+    "invalidId": "无效的任务ID",
+    "tooManyRequests": "请求过多！请等待 {{seconds}}s",
+    "sessionExpired": "您的会话已过期。请重新登录。",
+    "loadingError": "从服务器加载任务出错",
+    "addTaskError": "添加任务出错！",
+    "editTaskError": "编辑任务出错！",
+    "deleteTaskError": "删除任务出错！",
+    "authRequired": "您需要进行身份验证！"
+  },
+  "messages": {
+    "loading": "加载中...",
+    "rateLimit": "您添加了太多任务！请等待 {{seconds}}s。",
+    "editRateLimit": "请等待 {{seconds}}s 再编辑其他任务",
+    "deleteRateLimit": "请等待 {{seconds}}s 再删除其他任务"
+  },
+  "validation": {
+    "textRequired": "任务文本是必需的",
+    "textTooShort": "任务必须至少 3 个字符",
+    "textTooLong": "任务不能超过 500 个字符",
+    "invalidPriority": "选择有效的优先级（低、中、高）"
+  }
+}

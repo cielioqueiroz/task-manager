@@ -1,0 +1,32 @@
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import ptBR from '../locales/pt-BR.json'
+import en from '../locales/en.json'
+import es from '../locales/es.json'
+import zh from '../locales/zh.json'
+import ru from '../locales/ru.json'
+import de from '../locales/de.json'
+
+const resources = {
+  'pt-BR': { translation: ptBR },
+  'en': { translation: en },
+  'es': { translation: es },
+  'zh': { translation: zh },
+  'ru': { translation: ru },
+  'de': { translation: de }
+}
+
+const savedLanguage = localStorage.getItem('language') || 'pt-BR'
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources,
+    lng: savedLanguage,
+    fallbackLng: 'pt-BR',
+    interpolation: {
+      escapeValue: false
+    }
+  })
+
+export default i18n

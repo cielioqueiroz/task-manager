@@ -1,7 +1,10 @@
 import { supabase } from '../lib/supabase'
 import { logger } from '../lib/logger'
+import LanguageSwitcher from './LanguageSwitcher'
+import { useTranslation } from 'react-i18next'
 
 export default function Header({ darkMode, onToggleDarkMode, user, onLogout }) {
+  const { t } = useTranslation()
   const handleLogout = async () => {
     try {
       logger.action('logout_attempt')
@@ -31,13 +34,15 @@ export default function Header({ darkMode, onToggleDarkMode, user, onLogout }) {
             </div>
             <div>
               <h1 className="text-3xl font-bold font-heading bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Task Manager
+                {t('app.title')}
               </h1>
-              <p className="text-sm text-white/60 font-medium">Organize suas tarefas de forma elegante</p>
+              <p className="text-sm text-white/60 font-medium">{t('app.subtitle')}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+
             {user && (
               <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-white/5 border border-white/10">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
@@ -47,9 +52,9 @@ export default function Header({ darkMode, onToggleDarkMode, user, onLogout }) {
                 <button
                   onClick={handleLogout}
                   className="ml-2 px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors text-sm font-medium border border-red-500/30"
-                  title="Sair"
+                  title={t('header.logout')}
                 >
-                  <i className="fas fa-sign-out-alt mr-1"></i>Sair
+                  <i className="fas fa-sign-out-alt mr-1"></i>{t('header.logout')}
                 </button>
               </div>
             )}

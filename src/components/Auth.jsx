@@ -2,14 +2,22 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { supabase } from '../lib/supabase'
 import { logger } from '../lib/logger'
+import LanguageSwitcher from './LanguageSwitcher'
+import { useTranslation } from 'react-i18next'
 
 export default function AuthPage() {
+  const { t } = useTranslation()
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#0f111a] to-[#181b2a]">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#0f111a] to-[#181b2a]">
+      <div className="absolute top-6 right-6">
+        <LanguageSwitcher />
+      </div>
+
       <div className="w-full max-w-md p-8 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl">
         <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-white mb-2">🔐 Task Manager</h1>
-          <p className="text-gray-400">Entre na sua conta para gerenciar suas tarefas</p>
+          <h1 className="text-3xl font-bold text-white mb-2">🔐 {t('app.title')}</h1>
+          <p className="text-gray-400">{t('app.subtitle')}</p>
         </div>
 
         <Auth

@@ -1,0 +1,75 @@
+{
+  "app": {
+    "title": "Task Manager",
+    "subtitle": "Organize suas tarefas de forma elegante"
+  },
+  "auth": {
+    "signUp": "Criar Conta",
+    "signIn": "Entrar",
+    "email": "Email",
+    "password": "Senha",
+    "signUpWith": "Criar conta com",
+    "signInWith": "Entrar com",
+    "dontHaveAccount": "Não tem uma conta?",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "forgotPassword": "Esqueceu a senha?"
+  },
+  "header": {
+    "logout": "Sair",
+    "darkMode": "Modo escuro",
+    "lightMode": "Modo claro",
+    "language": "Idioma"
+  },
+  "tasks": {
+    "addTask": "Adicionar Tarefa",
+    "addTaskPlaceholder": "Digite uma nova tarefa...",
+    "noTasks": "Nenhuma tarefa ainda",
+    "editTask": "Editar Tarefa",
+    "deleteTask": "Deletar Tarefa",
+    "confirmDelete": "Tem certeza que deseja deletar esta tarefa?",
+    "completed": "Tarefa concluída!",
+    "reopened": "Tarefa reaberta",
+    "updated": "Tarefa atualizada com sucesso!",
+    "created": "Tarefa adicionada com sucesso!"
+  },
+  "filters": {
+    "all": "Todas",
+    "pending": "Pendentes",
+    "completed": "Concluídas",
+    "search": "Buscar tarefas..."
+  },
+  "stats": {
+    "total": "Total",
+    "pending": "Pendentes",
+    "completed": "Concluídas"
+  },
+  "priority": {
+    "low": "Baixa",
+    "medium": "Média",
+    "high": "Alta"
+  },
+  "errors": {
+    "emptyTask": "Digite algo para adicionar uma tarefa!",
+    "invalidPriority": "Prioridade inválida!",
+    "invalidId": "ID da tarefa inválido",
+    "tooManyRequests": "Muitos requisições! Aguarde {{seconds}}s",
+    "sessionExpired": "Sua sessão expirou. Faça login novamente.",
+    "loadingError": "Erro ao carregar tarefas do servidor",
+    "addTaskError": "Erro ao adicionar tarefa!",
+    "editTaskError": "Erro ao editar tarefa!",
+    "deleteTaskError": "Erro ao deletar tarefa!",
+    "authRequired": "Você precisa estar autenticado!"
+  },
+  "messages": {
+    "loading": "Carregando...",
+    "rateLimit": "Você adicionou muitas tarefas! Aguarde {{seconds}}s.",
+    "editRateLimit": "Aguarde {{seconds}}s antes de editar outra tarefa",
+    "deleteRateLimit": "Aguarde {{seconds}}s antes de deletar outra tarefa"
+  },
+  "validation": {
+    "textRequired": "O texto da tarefa é obrigatório",
+    "textTooShort": "A tarefa deve ter no mínimo 3 caracteres",
+    "textTooLong": "A tarefa não pode ter mais de 500 caracteres",
+    "invalidPriority": "Selecione uma prioridade válida (low, medium, high)"
+  }
+}

@@ -6,8 +6,14 @@ import Filters from './components/Filters'
 import TaskList from './components/TaskList'
 import Footer from './components/Footer'
 import Toast from './components/Toast'
+import AuthPage from './components/Auth'
 import { taskService } from './lib/taskService'
 import { testConnection } from './lib/testConnection'
+import { supabase } from './lib/supabase'
+import { logger } from './lib/logger'
+import { validateTaskInput } from './lib/validation'
+import { limiters } from './lib/rateLimiter'
+import { getSafeErrorMessage } from './lib/errorHandler'
 
 const DARK_MODE_KEY = 'darkMode'
 
@@ -19,6 +25,7 @@ export default function App() {
   const [toast, setToast] = useState(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [user, setUser] = useState(null)
 
   // Carregar dados do Supabase na montagem do componente
   useEffect(() => {
@@ -30,11 +37,22 @@ export default function App() {
           console.error('❌ Falha na conexão:', connTest.error)
         }
 
-        const tasksData = await taskService.getTasks()
-        setTasks(tasksData)
+        // ✅ Verificar se há usuário autenticado
+        const { data: { user: authUser } } = await supabase.auth.getUser()
+
+        if (authUser) {
+          setUser(authUser)
+          logger.action('session_loaded', { email: authUser.email })
+
+          // ✅ Carregar tarefas do usuário autenticado
+          const tasksData = await taskService.getTasks(authUser.id)
+          setTasks(tasksData)
+        }
       } catch (error) {
-        console.error('Erro ao carregar tarefas:', error)
-        showToast('Erro ao carregar tarefas do servidor', 'error')
+        console.error('Erro ao carregar dados:', error)
+        if (user) {
+          showToast('Erro ao carregar tarefas do servidor', 'error')
+        }
       } finally {
         // Carregar preferência de tema
         const savedDarkMode = localStorage.getItem(DARK_MODE_KEY) === 'true'
@@ -44,6 +62,22 @@ export default function App() {
     }
 
     loadData()
+
+    // ✅ Escutar mudanças de autenticação
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (session?.user) {
+          setUser(session.user)
+          logger.action('user_signed_in', { email: session.user.email })
+        } else {
+          setUser(null)
+          setTasks([])
+          logger.action('user_signed_out')
+        }
+      }
+    )
+
+    return () => subscription?.unsubscribe()
   }, [])
 
   // Salvar preferência de tema
@@ -67,68 +101,157 @@ export default function App() {
   }
 
   const addTask = async (text, priority = 'medium') => {
-    if (!text.trim()) {
-      showToast('📝 Para adicionar uma tarefa, digite algo no campo!', 'error')
+    // ✅ 1. Log de tentativa
+    logger.action('task_add_attempt', { text: text.slice(0, 20), priority })
+
+    // ✅ 2. Verificar rate limit
+    if (!limiters.addTask.checkLimit()) {
+      const waitTime = limiters.addTask.getResetTime()
+      showToast(`⏱️ Você adicionou muitas tarefas! Aguarde ${waitTime}s.`, 'error')
+      logger.warn('rate_limit_exceeded', { operation: 'addTask' })
+      return
+    }
+
+    // ✅ 3. Validar entrada
+    const validation = validateTaskInput(text, priority)
+    if (!validation.isValid) {
+      validation.errors.forEach(error => {
+        showToast(`❌ ${error}`, 'error')
+        logger.warn('validation_failed', { error })
+      })
+      return
+    }
+
+    if (!user) {
+      showToast('❌ Você precisa estar autenticado!', 'error')
       return
     }
 
     setIsLoading(true)
     try {
-      const newTask = await taskService.addTask(text, priority)
+      // ✅ 4. Usar dados sanitizados
+      const newTask = await taskService.addTask(
+        validation.sanitized.text,
+        validation.sanitized.priority,
+        user.id
+      )
       setTasks([newTask, ...tasks])
+
+      // ✅ 5. Log de sucesso
+      logger.action('task_created', { id: newTask.id })
       showToast('✅ Tarefa adicionada com sucesso!')
     } catch (error) {
-      console.error('Erro ao adicionar tarefa:', error)
-      showToast('❌ Erro ao adicionar tarefa!', 'error')
+      // ✅ 6. Error handling seguro
+      const safeMessage = getSafeErrorMessage(error, 'addTask')
+      logger.logError('task_create_failed', error, 'addTask')
+      showToast(`❌ ${safeMessage}`, 'error')
     } finally {
       setIsLoading(false)
     }
   }
 
   const toggleTask = async (id) => {
+    // ✅ 1. Rate limiting
+    if (!limiters.toggleTask.checkLimit()) {
+      const waitTime = limiters.toggleTask.getResetTime()
+      showToast(`⏱️ Aguarde ${waitTime}s`, 'error')
+      return
+    }
+
     const task = tasks.find(t => t.id === id)
     const newCompleted = !task?.completed
+
+    // ✅ 2. Log de tentativa
+    logger.action('task_toggle_attempt', { id, completed: newCompleted })
 
     try {
       await taskService.toggleTask(id, newCompleted)
       setTasks(tasks.map(t =>
         t.id === id ? { ...t, completed: newCompleted } : t
       ))
+      logger.action('task_toggled', { id, completed: newCompleted })
       showToast(newCompleted ? '✓ Tarefa concluída!' : '↩️ Tarefa reaberta', 'success')
     } catch (error) {
-      console.error('Erro ao atualizar tarefa:', error)
-      showToast('❌ Erro ao atualizar tarefa!', 'error')
+      // ✅ 3. Error handling seguro
+      const safeMessage = getSafeErrorMessage(error, 'toggleTask')
+      logger.logError('task_toggle_failed', error, 'toggleTask')
+      showToast(`❌ ${safeMessage}`, 'error')
     }
   }
 
   const deleteTask = async (id) => {
+    // ✅ 1. Validar ID
+    const { validateTaskId } = await import('./lib/validation')
+    const idValidation = validateTaskId(id)
+    if (!idValidation.isValid) {
+      showToast('❌ ID da tarefa inválido', 'error')
+      logger.warn('invalid_task_id', { id })
+      return
+    }
+
+    // ✅ 2. Rate limiting
+    if (!limiters.deleteTask.checkLimit()) {
+      const waitTime = limiters.deleteTask.getResetTime()
+      showToast(`⏱️ Aguarde ${waitTime}s antes de deletar outra tarefa`, 'error')
+      return
+    }
+
+    // ✅ 3. Log de tentativa
+    logger.action('task_delete_attempt', { id })
+
     try {
       await taskService.deleteTask(id)
       setTasks(tasks.filter(task => task.id !== id))
+      logger.action('task_deleted', { id })
       showToast('🗑️ Tarefa removida', 'info')
     } catch (error) {
-      console.error('Erro ao deletar tarefa:', error)
-      showToast('❌ Erro ao deletar tarefa!', 'error')
+      // ✅ 4. Error handling seguro
+      const safeMessage = getSafeErrorMessage(error, 'deleteTask')
+      logger.logError('task_delete_failed', error, 'deleteTask')
+      showToast(`❌ ${safeMessage}`, 'error')
     }
   }
 
   const editTask = async (id, newText, newPriority) => {
-    if (!newText.trim()) {
-      showToast('✏️ Digite algo para salvar a tarefa!', 'error')
+    // ✅ 1. Validar entrada
+    const validation = validateTaskInput(newText, newPriority)
+    if (!validation.isValid) {
+      validation.errors.forEach(error => {
+        showToast(`❌ ${error}`, 'error')
+        logger.warn('validation_failed_edit', { error })
+      })
       return
     }
 
+    // ✅ 2. Rate limiting
+    if (!limiters.editTask.checkLimit()) {
+      const waitTime = limiters.editTask.getResetTime()
+      showToast(`⏱️ Aguarde ${waitTime}s antes de editar outra tarefa`, 'error')
+      return
+    }
+
+    if (!user) {
+      showToast('❌ Você precisa estar autenticado!', 'error')
+      return
+    }
+
+    // ✅ 3. Log de tentativa
+    logger.action('task_edit_attempt', { id, text: newText.slice(0, 20), priority: newPriority })
+
     try {
-      await taskService.editTask(id, newText, newPriority)
+      await taskService.editTask(id, validation.sanitized.text, validation.sanitized.priority, user.id)
       setTasks(tasks.map(task =>
         task.id === id
-          ? { ...task, text: newText.trim(), priority: newPriority }
+          ? { ...task, text: validation.sanitized.text, priority: validation.sanitized.priority }
           : task
       ))
+      logger.action('task_updated', { id })
       showToast('✏️ Tarefa atualizada com sucesso!', 'success')
     } catch (error) {
-      console.error('Erro ao editar tarefa:', error)
-      showToast('❌ Erro ao editar tarefa!', 'error')
+      // ✅ 4. Error handling seguro
+      const safeMessage = getSafeErrorMessage(error, 'editTask')
+      logger.logError('task_edit_failed', error, 'editTask')
+      showToast(`❌ ${safeMessage}`, 'error')
     }
   }
 
@@ -165,16 +288,31 @@ export default function App() {
       <div className={`flex items-center justify-center h-screen bg-gradient-to-br ${darkMode ? 'from-[#0f111a] to-[#181b2a]' : 'from-slate-100 to-slate-200'}`}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-4"></div>
-          <p className={`font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Carregando suas tarefas...</p>
+          <p className={`font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Carregando...</p>
         </div>
       </div>
     )
   }
 
+  // ✅ Se não autenticado, mostrar página de login
+  if (!user) {
+    return <AuthPage />
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    setTasks([])
+  }
+
   return (
     <div className={`flex flex-col min-h-screen ${darkMode ? 'dark' : ''} bg-gradient-to-br ${darkMode ? 'from-[#0f111a] to-[#181b2a]' : 'from-slate-100 to-slate-200'}`}>
       {/* Header - Sticky no topo */}
-      <Header darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+      <Header
+        darkMode={darkMode}
+        onToggleDarkMode={() => setDarkMode(!darkMode)}
+        user={user}
+        onLogout={handleLogout}
+      />
 
       {/* Main Content - Scroll natural da página */}
       <main className="flex-1">

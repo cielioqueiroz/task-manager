@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase'
 import { logger } from '../lib/logger'
 import LanguageSwitcher from './LanguageSwitcher'
+import ThemeSwitcher from './ThemeSwitcher'
 import { useTranslation } from 'react-i18next'
 
 export default function Header({ darkMode, onToggleDarkMode, user, onLogout }) {
@@ -59,30 +60,7 @@ export default function Header({ darkMode, onToggleDarkMode, user, onLogout }) {
               </div>
             )}
 
-            <div className="flex items-center gap-1 p-1.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/10">
-              <button
-                onClick={onToggleDarkMode}
-                className={`p-2.5 rounded-full transition-all duration-200 ${
-                  darkMode
-                    ? 'bg-white/20 text-yellow-400'
-                    : 'text-blue-400'
-                }`}
-                title="Modo escuro"
-              >
-                <i className="fas fa-moon text-lg"></i>
-              </button>
-              <button
-                onClick={onToggleDarkMode}
-                className={`p-2.5 rounded-full transition-all duration-200 ${
-                  !darkMode
-                    ? 'bg-white/20 text-yellow-400'
-                    : 'text-blue-400'
-                }`}
-                title="Modo claro"
-              >
-                <i className="fas fa-sun text-lg"></i>
-              </button>
-            </div>
+            <ThemeSwitcher darkMode={darkMode} onToggleDarkMode={onToggleDarkMode} />
           </div>
         </div>
       </div>

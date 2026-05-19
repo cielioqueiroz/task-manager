@@ -25,6 +25,7 @@
     "addTask": "Add Task",
     "addTaskPlaceholder": "Type a new task...",
     "noTasks": "No tasks yet",
+    "createTaskToStart": "Create a task to get started",
     "editTask": "Edit Task",
     "deleteTask": "Delete Task",
     "confirmDelete": "Are you sure you want to delete this task?",
@@ -63,6 +64,7 @@
   },
   "messages": {
     "loading": "Loading...",
+    "adding": "Adding...",
     "rateLimit": "You added too many tasks! Wait {{seconds}}s.",
     "editRateLimit": "Wait {{seconds}}s before editing another task",
     "deleteRateLimit": "Wait {{seconds}}s before deleting another task"
@@ -72,5 +74,8 @@
     "textTooShort": "Task must be at least 3 characters",
     "textTooLong": "Task cannot be longer than 500 characters",
     "invalidPriority": "Select a valid priority (low, medium, high)"
+  },
+  "footer": {
+    "createdBy": "Created by"
   }
 }

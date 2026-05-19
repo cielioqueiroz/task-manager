@@ -4,16 +4,17 @@ import { supabase } from '../lib/supabase'
 import { logger } from '../lib/logger'
 import LanguageSwitcher from './LanguageSwitcher'
 import ThemeSwitcher from './ThemeSwitcher'
+import Toast from './Toast'
 import { useTranslation } from 'react-i18next'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 const localizationMap = {
   'pt-BR': {
     sign_up: {
       email_label: 'Endereço de email',
       password_label: 'Crie uma senha',
-      email_input_placeholder: 'seu@email.com',
-      password_input_placeholder: 'Sua senha',
+      email_input_placeholder: 'Digite seu email',
+      password_input_placeholder: 'Digite sua senha',
       button_label: 'Criar conta',
       loading_button_label: 'Criando conta...',
       social_provider_text: 'Entrar com {{provider}}',
@@ -23,8 +24,8 @@ const localizationMap = {
     sign_in: {
       email_label: 'Endereço de email',
       password_label: 'Sua senha',
-      email_input_placeholder: 'seu@email.com',
-      password_input_placeholder: 'Sua senha',
+      email_input_placeholder: 'Digite seu email',
+      password_input_placeholder: 'Digite sua senha',
       button_label: 'Entrar',
       loading_button_label: 'Entrando...',
       social_provider_text: 'Entrar com {{provider}}',
@@ -32,7 +33,7 @@ const localizationMap = {
     },
     magic_link: {
       email_input_label: 'Seu email',
-      email_input_placeholder: 'seu@email.com',
+      email_input_placeholder: 'Digite seu email',
       button_label: 'Enviar link mágico',
       loading_button_label: 'Enviando link...',
       link_text: 'Enviar um link mágico por email',
@@ -40,7 +41,7 @@ const localizationMap = {
     },
     forgotten_password: {
       email_label: 'Seu email',
-      email_input_placeholder: 'seu@email.com',
+      email_input_placeholder: 'Digite seu email',
       button_label: 'Enviar instruções de redefinição',
       loading_button_label: 'Enviando instruções...',
       link_text: 'Esqueceu sua senha?',
@@ -48,11 +49,19 @@ const localizationMap = {
     },
     update_password: {
       password_label: 'Nova senha',
-      password_input_placeholder: 'Sua nova senha',
+      password_input_placeholder: 'Digite sua nova senha',
       password_confirm_label: 'Confirme sua nova senha',
-      password_confirm_input_placeholder: 'Confirme sua nova senha',
+      password_confirm_input_placeholder: 'Confirme sua senha',
       button_label: 'Atualizar senha',
       loading_button_label: 'Atualizando senha...',
+    },
+    errors: {
+      validation_email_required: 'É necessário um email válido',
+      validation_password_required: 'É necessário uma senha',
+      validation_email_or_phone_required: 'É necessário um email válido',
+      invalid_email_or_password: 'Email ou senha inválidos',
+      user_already_exists: 'Este email já está registrado',
+      invalid_credentials: 'Email ou senha inválidos',
     },
   },
   en: {
@@ -101,6 +110,14 @@ const localizationMap = {
       button_label: 'Update password',
       loading_button_label: 'Updating password...',
     },
+    errors: {
+      validation_email_required: 'A valid email is required',
+      validation_password_required: 'A password is required',
+      validation_email_or_phone_required: 'A valid email is required',
+      invalid_email_or_password: 'Invalid email or password',
+      user_already_exists: 'This email is already registered',
+      invalid_credentials: 'Invalid email or password',
+    },
   },
   es: {
     sign_up: {
@@ -147,6 +164,14 @@ const localizationMap = {
       password_confirm_input_placeholder: 'Confirma tu contraseña',
       button_label: 'Actualizar contraseña',
       loading_button_label: 'Actualizando contraseña...',
+    },
+    errors: {
+      validation_email_required: 'Se requiere un correo válido',
+      validation_password_required: 'Se requiere una contraseña',
+      validation_email_or_phone_required: 'Se requiere un correo válido',
+      invalid_email_or_password: 'Correo o contraseña inválidos',
+      user_already_exists: 'Este correo ya está registrado',
+      invalid_credentials: 'Correo o contraseña inválidos',
     },
   },
   zh: {
@@ -195,6 +220,14 @@ const localizationMap = {
       button_label: '更新密码',
       loading_button_label: '正在更新...',
     },
+    errors: {
+      validation_email_required: '需要有效的电子邮件',
+      validation_password_required: '需要密码',
+      validation_email_or_phone_required: '需要有效的电子邮件',
+      invalid_email_or_password: '电子邮件或密码无效',
+      user_already_exists: '此电子邮件已注册',
+      invalid_credentials: '电子邮件或密码无效',
+    },
   },
   ru: {
     sign_up: {
@@ -241,6 +274,14 @@ const localizationMap = {
       password_confirm_input_placeholder: 'Подтвердите пароль',
       button_label: 'Обновить пароль',
       loading_button_label: 'Обновление...',
+    },
+    errors: {
+      validation_email_required: 'Требуется действительный адрес электронной почты',
+      validation_password_required: 'Требуется пароль',
+      validation_email_or_phone_required: 'Требуется действительный адрес электронной почты',
+      invalid_email_or_password: 'Неверный адрес электронной почты или пароль',
+      user_already_exists: 'Этот адрес электронной почты уже зарегистрирован',
+      invalid_credentials: 'Неверный адрес электронной почты или пароль',
     },
   },
   de: {
@@ -289,6 +330,14 @@ const localizationMap = {
       button_label: 'Passwort aktualisieren',
       loading_button_label: 'Wird aktualisiert...',
     },
+    errors: {
+      validation_email_required: 'Eine gültige E-Mail ist erforderlich',
+      validation_password_required: 'Ein Passwort ist erforderlich',
+      validation_email_or_phone_required: 'Eine gültige E-Mail ist erforderlich',
+      invalid_email_or_password: 'Ungültige E-Mail oder Passwort',
+      user_already_exists: 'Diese E-Mail ist bereits registriert',
+      invalid_credentials: 'Ungültige E-Mail oder Passwort',
+    },
   },
 }
 
@@ -296,6 +345,11 @@ export default function AuthPage() {
   const { t, i18n } = useTranslation()
   const [darkMode, setDarkMode] = useState(true)
   const [localization, setLocalization] = useState(localizationMap['pt-BR'])
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+  const authContainerRef = useRef(null)
+  const toastShownRef = useRef(false)
+  const errorElementsRef = useRef([])
 
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('darkMode') === 'true'
@@ -316,6 +370,164 @@ export default function AuthPage() {
     const currentLang = i18n.language || 'pt-BR'
     setLocalization(localizationMap[currentLang] || localizationMap['pt-BR'])
   }, [i18n.language])
+
+  const handleToastClose = useCallback(() => {
+    setShowToast(false)
+  }, [])
+
+  // Resetar flag quando toast fecha para permitir próximos erros
+  useEffect(() => {
+    if (!showToast) {
+      toastShownRef.current = false
+      // Restaurar elementos de erro quando toast fecha (para que possam ser detectados novamente)
+      errorElementsRef.current.forEach(el => {
+        if (el && el.style) {
+          el.style.display = ''
+        }
+      })
+      errorElementsRef.current = []
+    }
+  }, [showToast])
+
+  useEffect(() => {
+    const addPasswordToggle = () => {
+      if (!authContainerRef.current) return
+
+      const passwordInputs = authContainerRef.current.querySelectorAll('input[type="password"]')
+
+      passwordInputs.forEach(input => {
+        if (input.dataset.hasToggle) return
+
+        input.dataset.hasToggle = 'true'
+
+        // Configurar o input
+        input.style.paddingRight = '48px'
+
+        // Criar container relativo
+        const container = document.createElement('div')
+        container.style.position = 'relative'
+        container.style.width = '100%'
+
+        // Inserir o container antes do input e mover o input para dentro
+        input.parentElement?.insertBefore(container, input)
+        container.appendChild(input)
+
+        // Criar botão
+        const toggleBtn = document.createElement('button')
+        toggleBtn.type = 'button'
+        toggleBtn.innerHTML = '<i class="fas fa-eye" style="font-size: 16px;"></i>'
+        toggleBtn.style.position = 'absolute'
+        toggleBtn.style.right = '12px'
+        toggleBtn.style.top = '50%'
+        toggleBtn.style.transform = 'translateY(-50%)'
+        toggleBtn.style.background = 'none'
+        toggleBtn.style.border = 'none'
+        toggleBtn.style.color = 'rgba(255, 255, 255, 0.5)'
+        toggleBtn.style.cursor = 'pointer'
+        toggleBtn.style.padding = '8px'
+        toggleBtn.style.display = 'flex'
+        toggleBtn.style.alignItems = 'center'
+        toggleBtn.style.justifyContent = 'center'
+        toggleBtn.style.zIndex = '10'
+        toggleBtn.setAttribute('aria-label', 'Mostrar/Esconder senha')
+
+        // Hover effect
+        toggleBtn.addEventListener('mouseenter', () => {
+          toggleBtn.style.color = 'rgba(255, 255, 255, 0.8)'
+        })
+        toggleBtn.addEventListener('mouseleave', () => {
+          toggleBtn.style.color = 'rgba(255, 255, 255, 0.5)'
+        })
+
+        container.appendChild(toggleBtn)
+
+        toggleBtn.addEventListener('click', (e) => {
+          e.preventDefault()
+          const isPassword = input.type === 'password'
+          input.type = isPassword ? 'text' : 'password'
+          toggleBtn.innerHTML = isPassword ? '<i class="fas fa-eye-slash" style="font-size: 16px;"></i>' : '<i class="fas fa-eye" style="font-size: 16px;"></i>'
+        })
+      })
+    }
+
+    const toggleInterval = setInterval(addPasswordToggle, 300)
+
+    return () => clearInterval(toggleInterval)
+  }, [])
+
+  useEffect(() => {
+    let rafId = null
+
+    const validateAndShowToast = () => {
+      if (!authContainerRef.current || toastShownRef.current) {
+        rafId = requestAnimationFrame(validateAndShowToast)
+        return
+      }
+
+      const allElements = authContainerRef.current.querySelectorAll('*')
+
+      for (let element of allElements) {
+        const text = element.textContent?.toLowerCase() || ''
+        const isVisible = element.offsetParent !== null
+
+        if (!isVisible) continue
+
+        let errorMessage = null
+
+        // Erros de email não confirmado
+        if (text.includes('email not confirmed')) {
+          errorMessage = '❌ Email não confirmado.\n\nPor favor, verifique seu email e clique no link de confirmação para ativar sua conta.'
+        }
+        // Erros de login anônimo desabilitado (campos vazios)
+        else if (text.includes('anonymous sign-ins are disabled')) {
+          errorMessage = 'Por favor, insira seu email e senha para criar uma conta.'
+        }
+        // Erros de validação de força de senha
+        else if (text.includes('password should be at least')) {
+          errorMessage = '❌ Senha fraca.\n\nA senha deve ter no mínimo 6 caracteres.\n\nCrie uma senha mais forte para sua segurança.'
+        }
+        // Erros de validação (campos vazios)
+        else if (text.includes('missing email') || text.includes('missing password') || text.includes('missing email or phone')) {
+          errorMessage = 'Por favor, insira seus dados (e-mail e senha) para ter acesso ao sistema.'
+        }
+        // Erros de email inválido
+        else if (text.includes('invalid email') && !text.includes('invalid email or password')) {
+          errorMessage = '❌ Email inválido.\n\nPor favor, digite um email válido no formato: seu@email.com'
+        }
+        // Erros de autenticação (credenciais inválidas)
+        else if (text.includes('invalid login') || text.includes('invalid email or password') || text.includes('invalid credentials')) {
+          errorMessage = '❌ Email ou senha incorretos.\n\nNão tem conta? Clique em "Criar agora" para se registrar.'
+        }
+        // Erros de usuário não existe
+        else if (text.includes('user not found') || text.includes('user doesn\'t exist')) {
+          errorMessage = '❌ Esta conta não existe.\n\nClique em "Criar agora" para criar uma nova conta.'
+        }
+        // Email já registrado
+        else if (text.includes('already registered') || text.includes('user already exists')) {
+          errorMessage = '❌ Este email já está registrado.\n\nClique em "Entrar" para fazer login na sua conta.'
+        }
+
+        if (errorMessage) {
+          // Esconder elemento de erro e rastrear para restaurar depois
+          element.style.display = 'none'
+          errorElementsRef.current.push(element)
+
+          toastShownRef.current = true
+          setToastMessage(errorMessage)
+          setShowToast(true)
+          break
+        }
+      }
+
+      rafId = requestAnimationFrame(validateAndShowToast)
+    }
+
+    rafId = requestAnimationFrame(validateAndShowToast)
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [])
 
   return (
     <div className={`flex flex-col items-center justify-center min-h-screen bg-gradient-to-br ${darkMode ? 'from-[#0f111a] to-[#181b2a]' : 'from-slate-100 to-slate-200'}`}>
@@ -338,7 +550,8 @@ export default function AuthPage() {
           </p>
         </div>
 
-        <Auth
+        <div ref={authContainerRef}>
+          <Auth
           supabaseClient={supabase}
           appearance={{
             theme: ThemeSupa,
@@ -393,6 +606,9 @@ export default function AuthPage() {
             }
           }}
         />
+        </div>
+
+        {showToast && <Toast message={toastMessage} type="info" variant="modal" onClose={handleToastClose} />}
 
         <div className={`mt-6 text-center text-xs ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>
           <p>🔒 {t('auth.security')}</p>

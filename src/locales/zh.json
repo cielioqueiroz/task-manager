@@ -25,6 +25,7 @@
     "addTask": "添加任务",
     "addTaskPlaceholder": "输入新任务...",
     "noTasks": "暂无任务",
+    "createTaskToStart": "创建任务即可开始",
     "editTask": "编辑任务",
     "deleteTask": "删除任务",
     "confirmDelete": "确定要删除此任务吗？",
@@ -63,6 +64,7 @@
   },
   "messages": {
     "loading": "加载中...",
+    "adding": "添加中...",
     "rateLimit": "您添加了太多任务！请等待 {{seconds}}s。",
     "editRateLimit": "请等待 {{seconds}}s 再编辑其他任务",
     "deleteRateLimit": "请等待 {{seconds}}s 再删除其他任务"
@@ -72,5 +74,8 @@
     "textTooShort": "任务必须至少 3 个字符",
     "textTooLong": "任务不能超过 500 个字符",
     "invalidPriority": "选择有效的优先级（低、中、高）"
+  },
+  "footer": {
+    "createdBy": "创建者"
   }
 }

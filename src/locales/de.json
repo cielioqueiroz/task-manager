@@ -25,6 +25,7 @@
     "addTask": "Aufgabe hinzufügen",
     "addTaskPlaceholder": "Geben Sie eine neue Aufgabe ein...",
     "noTasks": "Noch keine Aufgaben",
+    "createTaskToStart": "Erstellen Sie eine Aufgabe um zu beginnen",
     "editTask": "Aufgabe bearbeiten",
     "deleteTask": "Aufgabe löschen",
     "confirmDelete": "Sind Sie sicher, dass Sie diese Aufgabe löschen möchten?",
@@ -63,6 +64,7 @@
   },
   "messages": {
     "loading": "Wird geladen...",
+    "adding": "Wird hinzugefügt...",
     "rateLimit": "Sie haben zu viele Aufgaben hinzugefügt! Bitte warten Sie {{seconds}}s.",
     "editRateLimit": "Bitte warten Sie {{seconds}}s, bevor Sie eine andere Aufgabe bearbeiten",
     "deleteRateLimit": "Bitte warten Sie {{seconds}}s, bevor Sie eine andere Aufgabe löschen"
@@ -72,5 +74,8 @@
     "textTooShort": "Die Aufgabe muss mindestens 3 Zeichen lang sein",
     "textTooLong": "Die Aufgabe darf nicht länger als 500 Zeichen sein",
     "invalidPriority": "Wählen Sie eine gültige Priorität (niedrig, mittel, hoch)"
+  },
+  "footer": {
+    "createdBy": "Erstellt von"
   }
 }

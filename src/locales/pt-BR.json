@@ -25,6 +25,7 @@
     "addTask": "Adicionar Tarefa",
     "addTaskPlaceholder": "Digite uma nova tarefa...",
     "noTasks": "Nenhuma tarefa ainda",
+    "createTaskToStart": "Crie uma tarefa para começar",
     "editTask": "Editar Tarefa",
     "deleteTask": "Deletar Tarefa",
     "confirmDelete": "Tem certeza que deseja deletar esta tarefa?",
@@ -63,6 +64,7 @@
   },
   "messages": {
     "loading": "Carregando...",
+    "adding": "Adicionando...",
     "rateLimit": "Você adicionou muitas tarefas! Aguarde {{seconds}}s.",
     "editRateLimit": "Aguarde {{seconds}}s antes de editar outra tarefa",
     "deleteRateLimit": "Aguarde {{seconds}}s antes de deletar outra tarefa"
@@ -72,5 +74,8 @@
     "textTooShort": "A tarefa deve ter no mínimo 3 caracteres",
     "textTooLong": "A tarefa não pode ter mais de 500 caracteres",
     "invalidPriority": "Selecione uma prioridade válida (low, medium, high)"
+  },
+  "footer": {
+    "createdBy": "Criado por"
   }
 }

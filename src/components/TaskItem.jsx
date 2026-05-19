@@ -1,15 +1,17 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import EditTaskModal from './EditTaskModal'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 
 export default function TaskItem({ task, onToggle, onDelete, onEdit }) {
+  const { t } = useTranslation()
   const [isEditing, setIsEditing] = useState(false)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
 
   const priorityConfig = {
-    high: { color: 'high', icon: 'fa-triangle-exclamation', label: 'Alta' },
-    medium: { color: 'medium', icon: 'fa-minus', label: 'Média' },
-    low: { color: 'low', icon: 'fa-circle', label: 'Baixa' }
+    high: { color: 'high', icon: 'fa-triangle-exclamation', labelKey: 'priority.high' },
+    medium: { color: 'medium', icon: 'fa-minus', labelKey: 'priority.medium' },
+    low: { color: 'low', icon: 'fa-circle', labelKey: 'priority.low' }
   }
 
   const config = priorityConfig[task.priority] || priorityConfig.medium
@@ -51,7 +53,7 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }) {
               {/* Badge de Prioridade - SEMPRE VISÍVEL */}
               <div className={`badge-priority badge-${config.color} shrink-0 shadow-lg`}>
                 <i className={`fas ${config.icon} text-sm`}></i>
-                <span className="font-bold">{config.label}</span>
+                <span className="font-bold">{t(config.labelKey)}</span>
               </div>
             </div>
 
@@ -64,7 +66,7 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }) {
               {task.completed && (
                 <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
                   <i className="fas fa-check-circle"></i>
-                  Concluída
+                  {t('tasks.completed')}
                 </span>
               )}
             </div>
@@ -76,7 +78,7 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }) {
             <button
               onClick={() => setIsEditing(true)}
               className="p-3 rounded-xl bg-white/5 hover:bg-blue-500/20 text-blue-400 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center justify-center"
-              title="Editar tarefa"
+              title={t('tasks.editTask')}
             >
               <i className="fas fa-edit text-base"></i>
             </button>
@@ -85,7 +87,7 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }) {
             <button
               onClick={() => setIsConfirmingDelete(true)}
               className="p-3 rounded-xl bg-white/5 hover:bg-red-500/20 text-red-400 transition-all duration-200 hover:scale-125 active:scale-95 flex items-center justify-center"
-              title="Deletar tarefa"
+              title={t('tasks.deleteTask')}
             >
               <i className="fas fa-trash text-base"></i>
             </button>

@@ -449,3 +449,11 @@ html:not(.dark) footer p span:first-child {
 .modal-actions {
   @apply flex gap-3 mt-6 justify-end;
 }
+
+/* Hide Supabase Auth validation errors - they'll be shown as Toast instead */
+.supabase-container [class*="alert"],
+.supabase-container [role="alert"],
+.supabase-container [class*="error"],
+[class*="supabase"] [class*="alert"] {
+  display: none !important;
+}

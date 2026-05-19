@@ -1,11 +1,15 @@
+import { useTranslation } from 'react-i18next'
+
 export default function Filters({ currentFilter, onFilterChange, onSearch, searchTerm }) {
+  const { t } = useTranslation()
+
   return (
     <div className="mb-8 space-y-4">
       {/* Barra de Busca */}
       <div className="relative">
         <input
           type="text"
-          placeholder="🔍 Buscar tarefas..."
+          placeholder={t('filters.search')}
           value={searchTerm}
           onChange={(e) => onSearch(e.target.value)}
           className="input-field w-full pl-4 pr-12"
@@ -18,9 +22,9 @@ export default function Filters({ currentFilter, onFilterChange, onSearch, searc
       {/* Filtros */}
       <div className="flex gap-3 flex-wrap">
         {[
-          { value: 'all', label: 'Todas', icon: 'fa-list' },
-          { value: 'pending', label: 'Pendentes', icon: 'fa-hourglass-end' },
-          { value: 'completed', label: 'Concluídas', icon: 'fa-check-circle' }
+          { value: 'all', labelKey: 'filters.all', icon: 'fa-list' },
+          { value: 'pending', labelKey: 'filters.pending', icon: 'fa-hourglass-end' },
+          { value: 'completed', labelKey: 'filters.completed', icon: 'fa-check-circle' }
         ].map(f => (
           <button
             key={f.value}
@@ -30,7 +34,7 @@ export default function Filters({ currentFilter, onFilterChange, onSearch, searc
             }`}
           >
             <i className={`fas ${f.icon}`}></i>
-            <span>{f.label}</span>
+            <span>{t(f.labelKey)}</span>
           </button>
         ))}
       </div>

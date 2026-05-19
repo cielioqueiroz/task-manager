@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function TaskForm({ onAddTask, isLoading }) {
+  const { t } = useTranslation()
   const [input, setInput] = useState('')
   const [priority, setPriority] = useState('medium')
 
@@ -23,14 +25,14 @@ export default function TaskForm({ onAddTask, isLoading }) {
         {/* Input Principal - Maior */}
         <div className="flex-1 relative group">
           <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wide">
-            Nova Tarefa
+            {t('tasks.addTask')}
           </label>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="O que você precisa fazer?"
+            placeholder={t('tasks.addTaskPlaceholder')}
             className="input-field w-full text-lg font-medium py-4"
             autoFocus
           />
@@ -46,9 +48,9 @@ export default function TaskForm({ onAddTask, isLoading }) {
             onChange={(e) => setPriority(e.target.value)}
             className="input-field px-3 py-3 font-medium text-sm"
           >
-            <option value="low">🟢 Baixa</option>
-            <option value="medium">🟡 Média</option>
-            <option value="high">🔴 Alta</option>
+            <option value="low">🟢 {t('priority.low')}</option>
+            <option value="medium">🟡 {t('priority.medium')}</option>
+            <option value="high">🔴 {t('priority.high')}</option>
           </select>
 
           <button
@@ -57,7 +59,7 @@ export default function TaskForm({ onAddTask, isLoading }) {
             className="btn btn-primary min-w-fit whitespace-nowrap shadow-lg hover:shadow-xl py-3 px-6 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <i className={`fas ${isLoading ? 'fa-spinner fa-spin' : 'fa-plus'} text-lg`}></i>
-            <span className="font-semibold">{isLoading ? 'Adicionando...' : 'Adicionar'}</span>
+            <span className="font-semibold">{isLoading ? t('messages.adding') : t('tasks.addTask')}</span>
           </button>
         </div>
       </form>
